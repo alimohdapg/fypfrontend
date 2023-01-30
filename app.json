@@ -18,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.alimohdapg.fypfrontend"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,6 +28,7 @@
       }
     },
     "web": {
+      "bundler":  "metro",
       "favicon": "./assets/favicon.png"
     },
     "extra": {
