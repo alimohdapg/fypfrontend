@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     loading:  {
-        marginTop: '10%',
+        marginTop: '7%',
     },
 });
 
