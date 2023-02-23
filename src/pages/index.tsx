@@ -3,11 +3,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import VideoInputScreen from "./VideoInputScreen";
 import SentimentAnalyticsScreen from "./SentimentAnalyticsScreen";
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 type RootStackParamList = {
     VideoInput: { name: string };
-    SentimentAnalytics: { video_id: string };
+    SentimentAnalytics: { positive: number, negative: number, neutral: number };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

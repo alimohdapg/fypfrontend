@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     label: {
-        marginTop: '30%',
+        marginTop: '40%',
         color: 'black',
         fontWeight: 'bold',
         fontSize: 18,
@@ -20,6 +20,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         width: '90%',
+    }, buttons: {
+        justifyContent: 'center',
+        flexDirection: 'row'
+    },
+    loading:  {
+        marginTop: '10%',
     },
 });
 
