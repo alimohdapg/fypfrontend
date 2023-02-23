@@ -26,7 +26,7 @@ const SentimentAnalyticsScreen = ({route}: Props) => {
                 <SmallText text={video_details.category}/>
                 <SmallText text={video_details.date}/>
             </View>
-            <Text style={styles.chartTitle}>Sentiment of Comments</Text>
+            <Text style={styles.chartTitle}>Overall Sentiment</Text>
             <PieChart pos_pct={positive} neu_pct={neutral} neg_pct={negative}/>
         </View>
     );
