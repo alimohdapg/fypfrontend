@@ -3,7 +3,7 @@ import {ActivityIndicator, Alert, Button, Text, TextInput, View} from 'react-nat
 import styles from "./styles";
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from "../index";
-import {get_sentiment, get_video_id, get_comment_count} from "../../api/sentiment_api";
+import {get_sentiment, get_video_id, get_comment_count, get_video_details} from "../../api/sentiment_api";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'VideoInput'>;
 
@@ -57,19 +57,19 @@ const VideoInputScreen = ({navigation}: Props) => {
                         }
                         setLoadingColor('#007AFF')
                         setLoading(true)
-                        let positive, negative, neutral = 0
+                        let sentiments = null
                         try {
-                            [positive, negative, neutral] = await get_sentiment(video_id)
+                            sentiments = await get_sentiment(video_id)
                         } catch (err) {
                             serverAlert()
                             setLoading(false)
                             return
                         }
                         setLoading(false)
+                        const video_details = await get_video_details(video_id)
                         return navigation.navigate('SentimentAnalytics', {
-                            positive: positive,
-                            negative: negative,
-                            neutral: neutral
+                            sentiments: sentiments,
+                            video_details: video_details
                         })
                     }
                     }

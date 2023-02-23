@@ -1,18 +1,33 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import styles from "./styles";
 import {RootStackParamList} from "../index";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
-import {PieChart} from "../../components/PieChart";
+import PieChart from "../../components/PieChart";
+import SmallText from "../../components/SmallText";
+
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SentimentAnalytics'>;
 
-const SentimentAnalyticsScreen = ({navigation, route}: Props) => {
+const SentimentAnalyticsScreen = ({route}: Props) => {
+
+    const [negative, neutral, positive] = route.params.sentiments;
+
+    const video_details = route.params.video_details;
 
     return (
         <View
             style={styles.container}>
-            <PieChart pos_pct={route.params.positive} neu_pct={route.params.neutral} neg_pct={route.params.negative}/>
+            <Image source={{uri: video_details.thumbnail_url}}
+                   style={styles.image}
+            />
+            <Text style={styles.titleText}>{video_details.title}</Text>
+            <View style={styles.details}>
+                <SmallText text={video_details.category}/>
+                <SmallText text={video_details.date}/>
+            </View>
+            <Text style={styles.chartTitle}>Sentiment of Comments</Text>
+            <PieChart pos_pct={positive} neu_pct={neutral} neg_pct={negative}/>
         </View>
     );
 };

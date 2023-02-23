@@ -1,6 +1,44 @@
 import {URL} from 'react-native-url-polyfill';
 import {encode} from 'base-64'
 import {API_KEY, DJANGO_USERNAME, DJANGO_PASSWORD} from "@env";
+import dayjs from 'dayjs';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+
+dayjs.extend(LocalizedFormat)
+const categories = new Map([
+    [1, 'Film & Animation'],
+    [2, 'Autos & Vehicles'],
+    [10, 'Music'],
+    [15, 'Pets & Animals'],
+    [17, 'Sports'],
+    [18, 'Short Movies'],
+    [19, 'Travel & Events'],
+    [20, 'Gaming'],
+    [21, 'Video Blogging'],
+    [22, 'People & Blogs'],
+    [23, 'Comedy'],
+    [24, 'Entertainment'],
+    [25, 'News & Politics'],
+    [26, 'Howto & Style'],
+    [27, 'Education'],
+    [28, 'Science & Technology'],
+    [29, 'Nonprofits & Activism'],
+    [30, 'Movies'],
+    [31, 'Anime / Animation'],
+    [32, 'Action / Adventure'],
+    [33, 'Classics'],
+    [34, 'Comedy'],
+    [35, 'Documentary'],
+    [36, 'Drama'],
+    [37, 'Family'],
+    [38, 'Foreign'],
+    [39, 'Horror'],
+    [40, 'Sci - Fi / Fantasy'],
+    [41, 'Thriller'],
+    [42, 'Shorts'],
+    [43, 'Shows'],
+    [44, 'Trailers'],
+]);
 
 function get_video_id(text: string) {
     const params = new URL(text).searchParams;
@@ -17,6 +55,16 @@ async function get_comment_count(video_id: string) {
     return parseInt(data.items[0].statistics.commentCount)
 }
 
+async function get_video_details(video_id: string) {
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${video_id}&key=${API_KEY}`)
+    const data = await response.json()
+    const title: string = data.items[0].snippet.title
+    const date: string = dayjs(data.items[0].snippet.publishedAt).format('LL')
+    const category: string = <string> categories.get(parseInt(data.items[0].snippet.categoryId))
+    const thumbnail_url: string = data.items[0].snippet.thumbnails.standard.url
+    return {title, date, category, thumbnail_url}
+}
+
 async function get_sentiment(video_id: string) {
     const response = await fetch(`http://127.0.0.1:8000/?video_id=${video_id}`, {
             method: "GET",
@@ -29,4 +77,4 @@ async function get_sentiment(video_id: string) {
     return [data.Negative, data.Neutral, data.Positive].map((num) => parseInt(num))
 }
 
-export {get_video_id, get_sentiment, get_comment_count};
+export {get_video_id, get_sentiment, get_comment_count, get_video_details};

@@ -5,8 +5,11 @@ import VideoInputScreen from "./VideoInputScreen";
 import SentimentAnalyticsScreen from "./SentimentAnalyticsScreen";
 
 type RootStackParamList = {
-    VideoInput: { name: string };
-    SentimentAnalytics: { positive: number, negative: number, neutral: number };
+    VideoInput: {};
+    SentimentAnalytics: {
+        sentiments: number[],
+        video_details: { title: string, date: string, category: string, thumbnail_url: string }
+    };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
