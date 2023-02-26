@@ -11,7 +11,6 @@ const VideoInputScreen = ({navigation}: Props) => {
 
     const [text, onChangeText] = React.useState('');
     const [loading, setLoading] = React.useState(false);
-    const [loading_color, setLoadingColor] = React.useState('#999999');
 
     function invalidUrlAlert() {
         Alert.alert('Invalid Video URL', '', [
@@ -31,31 +30,47 @@ const VideoInputScreen = ({navigation}: Props) => {
         ]);
     }
 
+    async function check_input(url: string) {
+        let video_id = ''
+        try {
+            video_id = get_video_id(text)
+        } catch (err) {
+            invalidUrlAlert()
+            return
+        }
+        let comment_count;
+        try {
+            comment_count = await get_comment_count(video_id)
+        } catch (err) {
+            invalidUrlAlert()
+            return
+        }
+        if (comment_count == 0 || isNaN(comment_count)) {
+            noCommentsAlert()
+            return
+        }
+        return video_id
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.label}>YouTube Video URL:</Text>
             <TextInput
-                style={styles.input}
+                style={[styles.input, loading && styles.disabled]}
                 onChangeText={onChangeText}
                 value={text}
                 placeholder="https://www.youtube.com/watch?v=LXb3EKWsInQ"
+                editable={!loading}
             />
             <View style={styles.buttons}>
                 <Button
                     title="Analyze Comments"
+                    disabled={loading}
                     onPress={async () => {
-                        let video_id = ''
-                        try {
-                            video_id = get_video_id(text)
-                        } catch (err) {
-                            invalidUrlAlert()
+                        const video_id = await check_input(text);
+                        if (video_id == undefined) {
                             return
                         }
-                        if (await get_comment_count(video_id) == 0) {
-                            noCommentsAlert()
-                            return
-                        }
-                        setLoadingColor('#007AFF')
                         setLoading(true)
                         let sentiments = null
                         try {
@@ -77,14 +92,21 @@ const VideoInputScreen = ({navigation}: Props) => {
                 <Button
                     title="Advanced Analysis"
                     color={'#FF9500'}
-                    onPress={() => {
+                    disabled={loading}
+                    onPress={async () => {
+                        const video_id = await check_input(text);
+                        if (video_id == undefined) {
+                            return
+                        }
+                        return navigation.navigate('AdvancedAnalysis', {
+                            video_id: video_id,
+                        })
                     }}
                 />
             </View>
-            <ActivityIndicator size="large" animating={loading} style={styles.loading} color={loading_color}/>
+            <ActivityIndicator size="large" animating={loading} style={styles.loading} color='#007AFF'/>
         </View>
     );
 };
-
 
 export default VideoInputScreen;

@@ -41,12 +41,13 @@ const categories = new Map([
 ]);
 
 function get_video_id(text: string) {
-    const params = new URL(text).searchParams;
-    const video_id = params.get('v')
-    if (!video_id) {
-        throw Error
+    let regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+    let match = text.match(regExp);
+    if (match) {
+        return match[1];
+    } else {
+        throw Error('Video ID not found')
     }
-    return video_id
 }
 
 async function get_comment_count(video_id: string) {
@@ -60,7 +61,7 @@ async function get_video_details(video_id: string) {
     const data = await response.json()
     const title: string = data.items[0].snippet.title
     const date: string = dayjs(data.items[0].snippet.publishedAt).format('LL')
-    const category: string = <string> categories.get(parseInt(data.items[0].snippet.categoryId))
+    const category: string = <string>categories.get(parseInt(data.items[0].snippet.categoryId))
     const thumbnail_url: string = data.items[0].snippet.thumbnails.standard.url
     return {title, date, category, thumbnail_url}
 }

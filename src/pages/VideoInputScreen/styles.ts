@@ -27,6 +27,10 @@ const styles = StyleSheet.create({
     loading:  {
         marginTop: '7%',
     },
+    disabled: {
+        color: '#8b8680'
+    }
+
 });
 
 export default styles;
