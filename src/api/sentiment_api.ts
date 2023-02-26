@@ -40,7 +40,7 @@ const categories = new Map([
     [44, 'Trailers'],
 ]);
 
-function get_video_id(text: string) {
+function getVideoId(text: string) {
     let regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
     let match = text.match(regExp);
     if (match) {
@@ -50,23 +50,23 @@ function get_video_id(text: string) {
     }
 }
 
-async function get_comment_count(video_id: string) {
+async function getCommentCount(video_id: string) {
     const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${video_id}&key=${API_KEY}`)
     const data = await response.json()
     return parseInt(data.items[0].statistics.commentCount)
 }
 
-async function get_video_details(video_id: string) {
+async function getVideoDetails(video_id: string) {
     const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${video_id}&key=${API_KEY}`)
     const data = await response.json()
     const title: string = data.items[0].snippet.title
     const date: string = dayjs(data.items[0].snippet.publishedAt).format('LL')
     const category: string = <string>categories.get(parseInt(data.items[0].snippet.categoryId))
-    const thumbnail_url: string = data.items[0].snippet.thumbnails.standard.url
-    return {title, date, category, thumbnail_url}
+    const thumbnailUrl: string = data.items[0].snippet.thumbnails.standard.url
+    return {title, date, category, thumbnailUrl: thumbnailUrl}
 }
 
-async function get_sentiment(video_id: string) {
+async function getSentiment(video_id: string) {
     const response = await fetch(`http://127.0.0.1:8000/?video_id=${video_id}`, {
             method: "GET",
             headers: {
@@ -78,4 +78,4 @@ async function get_sentiment(video_id: string) {
     return [data.Negative, data.Neutral, data.Positive].map((num) => parseInt(num))
 }
 
-export {get_video_id, get_sentiment, get_comment_count, get_video_details};
+export {getVideoId, getSentiment, getCommentCount, getVideoDetails};

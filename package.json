@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/prebuild-config": "~6.0.0",
+    "@react-native-picker/picker": "^2.4.8",
     "@react-navigation/native": "^6.1.4",
     "@react-navigation/native-stack": "^6.9.10",
     "base-64": "^1.0.0",

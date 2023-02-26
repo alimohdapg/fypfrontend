@@ -3,7 +3,7 @@ import {ActivityIndicator, Alert, Button, Text, TextInput, View} from 'react-nat
 import styles from "./styles";
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from "../index";
-import {get_sentiment, get_video_id, get_comment_count, get_video_details} from "../../api/sentiment_api";
+import {getSentiment, getVideoId, getCommentCount, getVideoDetails} from "../../api/sentiment_api";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'VideoInput'>;
 
@@ -30,26 +30,26 @@ const VideoInputScreen = ({navigation}: Props) => {
         ]);
     }
 
-    async function check_input(url: string) {
-        let video_id = ''
+    async function checkInput(url: string) {
+        let videoId = ''
         try {
-            video_id = get_video_id(text)
+            videoId = getVideoId(url)
         } catch (err) {
             invalidUrlAlert()
-            return
+            throw Error()
         }
-        let comment_count;
+        let commentCount;
         try {
-            comment_count = await get_comment_count(video_id)
+            commentCount = await getCommentCount(videoId)
         } catch (err) {
             invalidUrlAlert()
-            return
+            throw Error()
         }
-        if (comment_count == 0 || isNaN(comment_count)) {
+        if (commentCount == 0 || isNaN(commentCount)) {
             noCommentsAlert()
-            return
+            throw Error()
         }
-        return video_id
+        return {videoId, commentCount}
     }
 
     return (
@@ -67,24 +67,26 @@ const VideoInputScreen = ({navigation}: Props) => {
                     title="Analyze Comments"
                     disabled={loading}
                     onPress={async () => {
-                        const video_id = await check_input(text);
-                        if (video_id == undefined) {
+                        let videoId;
+                        try {
+                            videoId = (await checkInput(text)).videoId;
+                        } catch (err){
                             return
                         }
                         setLoading(true)
                         let sentiments = null
                         try {
-                            sentiments = await get_sentiment(video_id)
+                            sentiments = await getSentiment(videoId)
                         } catch (err) {
                             serverAlert()
                             setLoading(false)
                             return
                         }
                         setLoading(false)
-                        const video_details = await get_video_details(video_id)
+                        const videoDetails = await getVideoDetails(videoId)
                         return navigation.navigate('SentimentAnalytics', {
                             sentiments: sentiments,
-                            video_details: video_details
+                            videoDetails: videoDetails
                         })
                     }
                     }
@@ -94,12 +96,15 @@ const VideoInputScreen = ({navigation}: Props) => {
                     color={'#FF9500'}
                     disabled={loading}
                     onPress={async () => {
-                        const video_id = await check_input(text);
-                        if (video_id == undefined) {
+                        let videoId, commentCount;
+                        try {
+                            ({videoId, commentCount} = await checkInput(text));
+                        } catch (err){
                             return
                         }
                         return navigation.navigate('AdvancedAnalysis', {
-                            video_id: video_id,
+                            videoId: videoId,
+                            commentCount: commentCount
                         })
                     }}
                 />

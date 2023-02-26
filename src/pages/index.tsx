@@ -9,10 +9,11 @@ type RootStackParamList = {
     VideoInput: {};
     SentimentAnalytics: {
         sentiments: number[],
-        video_details: { title: string, date: string, category: string, thumbnail_url: string }
+        videoDetails: { title: string, date: string, category: string, thumbnailUrl: string }
     },
     AdvancedAnalysis: {
-        video_id: string
+        videoId: string
+        commentCount: number
     };
 };
 

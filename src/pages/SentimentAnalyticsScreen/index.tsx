@@ -13,12 +13,12 @@ const SentimentAnalyticsScreen = ({route}: Props) => {
 
     const [negative, neutral, positive] = route.params.sentiments;
 
-    const video_details = route.params.video_details;
+    const video_details = route.params.videoDetails;
 
     return (
         <View
             style={styles.container}>
-            <Image source={{uri: video_details.thumbnail_url}}
+            <Image source={{uri: video_details.thumbnailUrl}}
                    style={styles.image}
             />
             <Text style={styles.titleText}>{video_details.title}</Text>
