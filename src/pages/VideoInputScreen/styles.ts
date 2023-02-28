@@ -6,9 +6,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'flex-start',
+        paddingTop: '40%'
+    }, buttons: {
+        justifyContent: 'center',
+        flexDirection: 'row'
     },
     label: {
-        marginTop: '40%',
         color: 'black',
         fontWeight: 'bold',
         fontSize: 18,
@@ -20,17 +23,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         width: '90%',
-    }, buttons: {
-        justifyContent: 'center',
-        flexDirection: 'row'
-    },
-    loading:  {
-        marginTop: '7%',
     },
     disabled: {
         color: '#8b8680'
     }
-
 });
 
 export default styles;

@@ -1,9 +1,10 @@
 import React from 'react';
-import {ActivityIndicator, Alert, Button, Text, TextInput, View} from 'react-native';
+import {Alert, Button, Text, TextInput, View} from 'react-native';
 import styles from "./styles";
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from "../index";
 import {getSentiment, getVideoId, getCommentCount, getVideoDetails} from "../../api/sentiment_api";
+import Loading from "../../components/Loading";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'VideoInput'>;
 
@@ -61,6 +62,7 @@ const VideoInputScreen = ({navigation}: Props) => {
                 value={text}
                 placeholder="https://www.youtube.com/watch?v=LXb3EKWsInQ"
                 editable={!loading}
+                keyboardType={'url'}
             />
             <View style={styles.buttons}>
                 <Button
@@ -70,7 +72,7 @@ const VideoInputScreen = ({navigation}: Props) => {
                         let videoId;
                         try {
                             videoId = (await checkInput(text)).videoId;
-                        } catch (err){
+                        } catch (err) {
                             return
                         }
                         setLoading(true)
@@ -99,7 +101,7 @@ const VideoInputScreen = ({navigation}: Props) => {
                         let videoId, commentCount;
                         try {
                             ({videoId, commentCount} = await checkInput(text));
-                        } catch (err){
+                        } catch (err) {
                             return
                         }
                         return navigation.navigate('AdvancedAnalysis', {
@@ -109,7 +111,7 @@ const VideoInputScreen = ({navigation}: Props) => {
                     }}
                 />
             </View>
-            <ActivityIndicator size="large" animating={loading} style={styles.loading} color='#007AFF'/>
+            <Loading loading={loading} color='#007AFF'/>
         </View>
     );
 };
