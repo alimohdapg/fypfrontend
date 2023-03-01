@@ -1,11 +1,12 @@
 import React from 'react';
-import {Alert, Button, Modal, Text, TextInput, View} from 'react-native';
+import {Alert, Button, Modal, Pressable, Switch, Text, TextInput, View} from 'react-native';
 import styles from "./styles";
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from "../index";
 import {Picker} from "@react-native-picker/picker";
 import Loading from "../../components/Loading";
 import {BlurView} from 'expo-blur';
+import DateTimePicker, {DateTimePickerEvent} from '@react-native-community/datetimepicker';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AdvancedAnalysis'>;
 
@@ -15,6 +16,20 @@ const AdvancedAnalysisScreen = ({navigation, route}: Props) => {
     const [commentModalVisible, setCommentModalVisible] = React.useState(false);
     const [commentCount, setCommentCount] = React.useState(Math.min(1000, route.params.commentCount));
     const [minLikeCount, setMinLikeCount] = React.useState(0);
+    const [newestFirst, setNewestFirst] = React.useState(true);
+    const [likeCountSwitch, setLikeCountSwitch] = React.useState(false);
+    const [dateSwitch, setDateSwitch] = React.useState(false);
+    const [date, setDate] = React.useState(new Date(1598051730000));
+
+    const toggleLikeCountSwitch = () => setLikeCountSwitch(previousState => !previousState);
+
+    const toggleDateSwitch = () => setDateSwitch(previousState => !previousState);
+
+    const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
+        if (typeof selectedDate !== 'undefined') {
+            setDate(selectedDate);
+        }
+    };
 
     function getCommentCounts() {
         const counts = [1]
@@ -49,7 +64,7 @@ const AdvancedAnalysisScreen = ({navigation, route}: Props) => {
                         <View style={styles.modalView}>
                             <Picker
                                 selectedValue={commentCount}
-                                onValueChange={(itemValue, itemIndex) =>
+                                onValueChange={(itemValue) =>
                                     setCommentCount(itemValue)
                                 }>
                                 {getCommentCounts().map((count) =>
@@ -66,6 +81,23 @@ const AdvancedAnalysisScreen = ({navigation, route}: Props) => {
             </Modal>
             <View style={styles.inputContainer}>
                 <View style={styles.inputPair}>
+                    <Text style={styles.label}>Priority</Text>
+                    <View style={styles.priorityButtons}>
+                        <Pressable
+                            style={[styles.priorityButton, !newestFirst && styles.buttonDisabled]}
+                            onPress={() => setNewestFirst(true)}>
+                            <Text style={[styles.buttonText, !newestFirst && styles.disabled]}>Newest First</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.priorityButton, newestFirst && styles.buttonDisabled]}
+                            onPress={() => setNewestFirst(false)}>
+                            <Text style={[styles.buttonText, newestFirst && styles.disabled]}>Oldest First</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </View>
+            <View style={styles.inputContainer}>
+                <View style={styles.inputPair}>
                     <Text style={styles.label}>Maximum Comment Count</Text>
                     <Button
                         title={`${commentCount}  〉`}
@@ -73,7 +105,16 @@ const AdvancedAnalysisScreen = ({navigation, route}: Props) => {
                     />
                 </View>
                 <View style={styles.inputPair}>
-                    <Text style={styles.label}>Minimum Like Count</Text>
+                    <View style={styles.labelSwitch}>
+                        <Text style={styles.label}>{likeCountSwitch ? 'Minimum' : 'Maximum'} Like Count</Text>
+                        <Switch
+                            style={styles.switch}
+                            trackColor={{false: '#3e3e3e', true: '#3e3e3e'}}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={toggleLikeCountSwitch}
+                            value={likeCountSwitch}
+                        />
+                    </View>
                     <TextInput
                         style={[styles.textInput, (loading || minLikeCount == 0) && styles.disabled]}
                         onChangeText={(text) => {
@@ -85,6 +126,25 @@ const AdvancedAnalysisScreen = ({navigation, route}: Props) => {
                         placeholder="0"
                         editable={!loading}
                         keyboardType={'number-pad'}
+                    />
+                </View>
+            </View>
+            <View style={styles.inputContainer}>
+                <View style={styles.inputPair}>
+                     <View style={styles.labelSwitch}>
+                        <Text style={styles.label}>{dateSwitch ? 'Before' : 'After'} Date</Text>
+                        <Switch
+                            style={styles.switch}
+                            trackColor={{false: '#3e3e3e', true: '#3e3e3e'}}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={toggleDateSwitch}
+                            value={dateSwitch}
+                        />
+                    </View>
+                    <DateTimePicker
+                        value={date}
+                        mode={'date'}
+                        onChange={onChangeDate}
                     />
                 </View>
             </View>
