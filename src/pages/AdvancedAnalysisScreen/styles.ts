@@ -67,7 +67,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 2,
         borderWidth: 1,
         borderRadius: 15,
-        padding: 7
+        padding: 7,
+        height: 40,
+        justifyContent: "center"
     },
     buttonText: {
         fontSize: 15,
@@ -88,6 +90,11 @@ const styles = StyleSheet.create({
     },
     switch: {
         marginHorizontal: 10
+    },
+    detailText: {
+        paddingVertical: 5,
+        fontSize: 9,
+        color: '#8b8680'
     }
 });
 

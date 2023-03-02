@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 1,
         padding: 10,
-        width: '90%',
+        width: '94%',
+        borderRadius: 15
     },
     disabled: {
         color: '#8b8680'

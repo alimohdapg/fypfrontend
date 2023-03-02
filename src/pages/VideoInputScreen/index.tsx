@@ -1,10 +1,11 @@
 import React from 'react';
-import {Alert, Button, Text, TextInput, View} from 'react-native';
+import {Button, Text, TextInput, View} from 'react-native';
 import styles from "./styles";
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from "../index";
 import {getSentiment, getVideoId, getCommentCount, getVideoDetails} from "../../api/sentiment_api";
 import Loading from "../../components/Loading";
+import {invalidUrlAlert, noCommentsAlert, serverAlert} from "../../api/alert";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'VideoInput'>;
 
@@ -12,24 +13,6 @@ const VideoInputScreen = ({navigation}: Props) => {
 
     const [text, onChangeText] = React.useState('');
     const [loading, setLoading] = React.useState(false);
-
-    function invalidUrlAlert() {
-        Alert.alert('Invalid Video URL', '', [
-            {text: 'OK'},
-        ]);
-    }
-
-    function noCommentsAlert() {
-        Alert.alert('Video has no comments', '', [
-            {text: 'OK'},
-        ]);
-    }
-
-    function serverAlert() {
-        Alert.alert('Internal Server Error', 'Please try again later.', [
-            {text: 'OK'},
-        ]);
-    }
 
     async function checkInput(url: string) {
         let videoId = ''

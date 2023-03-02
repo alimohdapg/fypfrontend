@@ -50,14 +50,14 @@ function getVideoId(text: string) {
     }
 }
 
-async function getCommentCount(video_id: string) {
-    const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${video_id}&key=${API_KEY}`)
+async function getCommentCount(videoId: string) {
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoId}&key=${API_KEY}`)
     const data = await response.json()
     return parseInt(data.items[0].statistics.commentCount)
 }
 
-async function getVideoDetails(video_id: string) {
-    const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${video_id}&key=${API_KEY}`)
+async function getVideoDetails(videoId: string) {
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`)
     const data = await response.json()
     const title: string = data.items[0].snippet.title
     const date: string = dayjs(data.items[0].snippet.publishedAt).format('LL')
@@ -66,8 +66,8 @@ async function getVideoDetails(video_id: string) {
     return {title, date, category, thumbnailUrl: thumbnailUrl}
 }
 
-async function getSentiment(video_id: string) {
-    const response = await fetch(`http://127.0.0.1:8000/?video_id=${video_id}`, {
+async function getSentiment(videoId: string) {
+    const response = await fetch(`http://127.0.0.1:8000/?video_id=${videoId}`, {
             method: "GET",
             headers: {
                 'Authorization': 'Basic ' + encode(`${DJANGO_USERNAME}:${DJANGO_PASSWORD}`),
@@ -78,4 +78,16 @@ async function getSentiment(video_id: string) {
     return [data.Negative, data.Neutral, data.Positive].map((num) => parseInt(num))
 }
 
-export {getVideoId, getSentiment, getCommentCount, getVideoDetails};
+async function getAdvancedSentiment(videoId: string, priority: string, commentCount: number, likeCount: number, minMaxLikeCount: string, jsonDate: string) {
+    const response = await fetch(`http://127.0.0.1:8000/?video_id=${videoId}&priority=${priority}&comment_count=${commentCount}&like_count=${likeCount}&min_max_like_count=${minMaxLikeCount}&date=${jsonDate}`, {
+            method: "GET",
+            headers: {
+                'Authorization': 'Basic ' + encode(`${DJANGO_USERNAME}:${DJANGO_PASSWORD}`),
+            }
+        }
+    )
+    const data = await response.json()
+    return [data.Negative, data.Neutral, data.Positive].map((num) => parseInt(num))
+}
+
+export {getVideoId, getSentiment, getAdvancedSentiment, getCommentCount, getVideoDetails};
