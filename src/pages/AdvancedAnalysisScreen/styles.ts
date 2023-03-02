@@ -90,11 +90,6 @@ const styles = StyleSheet.create({
     },
     switch: {
         marginHorizontal: 10
-    },
-    detailText: {
-        paddingVertical: 5,
-        fontSize: 9,
-        color: '#8b8680'
     }
 });
 

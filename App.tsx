@@ -1,4 +1,4 @@
-import {Router} from './src/pages/index';
+import {Router} from './src/pages';
 
 export default function App() {
     return (

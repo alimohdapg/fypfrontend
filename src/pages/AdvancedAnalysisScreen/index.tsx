@@ -9,6 +9,7 @@ import {BlurView} from 'expo-blur';
 import DateTimePicker, {DateTimePickerEvent} from '@react-native-community/datetimepicker';
 import {getAdvancedSentiment, getVideoDetails} from "../../api/sentiment_api";
 import {serverAlert, noCommentsForFiltersAlert} from "../../api/alert";
+import SmallText from "../../components/SmallText";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AdvancedAnalysis'>;
 
@@ -147,8 +148,7 @@ const AdvancedAnalysisScreen = ({navigation, route}: Props) => {
                                 disabled={loading}
                             />
                         </View>
-                        <Text style={styles.detailText}>Can only be used with the "Newest First" priority
-                            setting.</Text>
+                        <SmallText text={'Can only be used with the "Newest First" priority setting.'}/>
                     </View>
                     <DateTimePicker
                         value={date}

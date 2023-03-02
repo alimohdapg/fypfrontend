@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     },
     details: {
         width: '80%',
-        marginTop: '2%',
+        marginTop: '0.75%',
         flexDirection: 'row',
         justifyContent: 'space-between',
     }

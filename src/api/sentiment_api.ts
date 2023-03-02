@@ -1,4 +1,3 @@
-import {URL} from 'react-native-url-polyfill';
 import {encode} from 'base-64'
 import {API_KEY, DJANGO_USERNAME, DJANGO_PASSWORD} from "@env";
 import dayjs from 'dayjs';
